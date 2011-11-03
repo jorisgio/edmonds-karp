@@ -20,7 +20,7 @@ typedef struct graph {
 Graph *create(int size);
 
 void destructGraph(Graph *g) ;
-void addEdge(Graph *g, int src, int dst, int c);
+int addEdge(Graph *g, int src, int dst, int c);
 int addVertex(Graph *g);
 Edge *findEdge(Graph *g, int src, int dst);
 void incrAttr(Graph *g, int src, int dst, int flow, int cap);

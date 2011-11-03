@@ -7,11 +7,11 @@ Graph *create(int size) {
 
    /* if ((g = ALLOC(Graph)) == NULL) */
   	if ((g = ALLOC(Graph)) == NULL){
-      ERROR(EMSG);
+      ERROR(EMSG); abort();
 	  }
   
     if ( (g->vertices = (Edge **) malloc(size * sizeof(Edge *)) ) == NULL ) {
-      ERROR(EMSG);
+      ERROR(EMSG); abort();
 	}
     g->vertex_nb = size ;
     g->edge_nb = 0;
@@ -44,23 +44,27 @@ void destructGraph(Graph *g) {
 }
 
 /* ajoute une branche au graphe, (Work around : Trier la liste ?) */
-void addEdge(Graph *g, int src, int dst, int c) {
+int addEdge(Graph *g, int src, int dst, int c) {
   Edge *p;
-  if (src > g->vertex_nb) {
-	 abort(); //ENOFOUND(src);			/* Il faut éviter d'allouer dans le vide !*/
-  }								// Sinon, memleaks (merci valgrind) 
+  if (src > g->vertex_nb && dst < g->vertex_nb) {
+	 return src;			/* Il faut éviter d'allouer dans le vide ! sinon memleak*/
+  }							
 
   if ( (p = ALLOC(Edge)) == NULL) {
-    ERROR(EMSG);
+    ERROR(EMSG); abort();
   }
   p->cap = c;
   p->flow = 0;
   p->next = g->vertices[src];
   p->dst = dst;
   g->vertices[src] = p;
+  return SUCCESS;  
 }
 /* recherche elt dans la liste d'adjacence */
 static Edge *searchList(Edge *start, int elt) {
+  if ( start == NULL){
+	return NULL; 	/*Not Found */
+  }
   if (elt ==  start->dst) 
     return start;
   return searchList(start->next, elt);

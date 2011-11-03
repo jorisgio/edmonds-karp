@@ -14,7 +14,7 @@ struct stack {
 static void push(struct stack *s, int elt) {
   if ( s->cur - s->stack ==  s->size )
     if ( (s->stack = (int *) realloc(s->stack, s->size *= 2)) == NULL ){
-      ERROR(EMSG);
+      ERROR(EMSG); abort();
 	}
   *(++s->cur)= elt;
     
@@ -23,12 +23,12 @@ static void push(struct stack *s, int elt) {
 static int pop(struct stack *s) {
 
   if ( s->cur == s->stack) {
-    ERROR("Stack is empty, can't pop");
+    ERROR("Stack is empty, can't pop"); abort();
   }
 
   if (s->cur - s->stack <= s->size / 2 ){
     if( (s->stack = (int *) realloc(s->stack, s->size = (s->size - s->size / 4) )) == NULL){
-      ERROR(EMSG);
+      ERROR(EMSG); abort();
 	}
   }
   return *(s->cur--);
@@ -46,7 +46,7 @@ int dfs(Graph *g, int s, int t, int *p) {
   struct stack fifo;
   
   if ( ( fifo.stack = (int *) malloc(g->edge_nb * sizeof(int) / 2)) == NULL) {
-    ERROR(EMSG);
+    ERROR(EMSG); abort();
   }
   fifo.size = g->edge_nb / 2 ;
   fifo.cur = fifo.stack;	
