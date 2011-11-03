@@ -5,17 +5,16 @@ Graph *create(int size) {
     Graph *g;
     int i;
 
-    if ((g = ALLOC(Graph)) == NULL)
+   /* if ((g = ALLOC(Graph)) == NULL) */
+  	if ((g = ALLOC(Graph)) == NULL){
       ERROR(EMSG);
-
-    /* On alloue 1.5 fois la taille nécessaire */
-
-    if ( (g->vertices = (Edge **) malloc(size * sizeof(Edge *)) ) == NULL )
+	  }
+  
+    if ( (g->vertices = (Edge **) malloc(size * sizeof(Edge *)) ) == NULL ) {
       ERROR(EMSG);
-
+	}
     g->vertex_nb = size ;
     g->edge_nb = 0;
-    g->size = size * 1.5;
 
     for (i = 0; i < size; ++i)
         g->vertices[i] = NULL;
@@ -37,7 +36,7 @@ static void destructAdj(Edge *elt){
 void destructGraph(Graph *g) {
     int i;
 
-    for (i = 0; i < g->size; ++i)
+    for (i = 0; i < g->vertex_nb; ++i)
         destructAdj( g->vertices[i] );
 
     free(g->vertices);
@@ -47,9 +46,13 @@ void destructGraph(Graph *g) {
 /* ajoute une branche au graphe, (Work around : Trier la liste ?) */
 void addEdge(Graph *g, int src, int dst, int c) {
   Edge *p;
-  if ( (p = ALLOC(Edge)) == NULL)
-    ERROR(EMSG);
+  if (src > g->vertex_nb) {
+	 abort(); //ENOFOUND(src);			/* Il faut éviter d'allouer dans le vide !*/
+  }								// Sinon, memleaks (merci valgrind) 
 
+  if ( (p = ALLOC(Edge)) == NULL) {
+    ERROR(EMSG);
+  }
   p->cap = c;
   p->flow = 0;
   p->next = g->vertices[src];
@@ -60,12 +63,12 @@ void addEdge(Graph *g, int src, int dst, int c) {
 static Edge *searchList(Edge *start, int elt) {
   if (elt ==  start->dst) 
     return start;
-  searchList(start->next, elt);
+  return searchList(start->next, elt);
 }
 
 /* renvoit la branche entre src et dst */
 inline Edge *findEdge(Graph *g, int src, int dst) {
-  searchList(g->vertices[src],dst);
+  return searchList(g->vertices[src],dst);
 }
 
 void incrAttr(Graph *g, int src, int dst, int flow, int cap) {

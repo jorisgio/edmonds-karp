@@ -14,14 +14,16 @@ typedef struct edge { /* workaround : un tableau à la place d'une liste chainé
 typedef struct graph {
     int vertex_nb;      /* nombre de noeuds dans le graphe */
     int edge_nb;        /* nombre de branches */
-    int size;           /* taille tu tableau */
     Edge **vertices;    /* table des noeuds, contenant des pointeurs vers des sutructures Edge*/
     } Graph;
 
 Graph *create(int size);
-static void destructAdj(Edge *elt);
-void destructGraph(Graph *g) ;
 
+void destructGraph(Graph *g) ;
+void addEdge(Graph *g, int src, int dst, int c);
 int addVertex(Graph *g);
+Edge *findEdge(Graph *g, int src, int dst);
+void incrAttr(Graph *g, int src, int dst, int flow, int cap);
+void incrCap(Graph *g, int src, int dst, int cap);
 
 #endif // GRAPH_H_INCLUDED

@@ -1,4 +1,4 @@
-!#ifndef EK_H_INCLUDED
+#ifndef EK_H_INCLUDED
 #define EK_H_INCLUDED
 
 #include <stdlib.h>
@@ -21,6 +21,11 @@
 #define END 0
 #define CONTINUE 1
 
-#define INFTY MAX_INT
+#define INFTY INT_MAX
+
+#define MIN(a,b) ((a<=b) ? (a) : (b))
+
+#define SUCCESS 0
+#define ENOPATH 1 /* Valeure retournée quand il n'existe pas de chemin entre deux noeuds */
 
 #endif /* EK_H_INCLUDED */
